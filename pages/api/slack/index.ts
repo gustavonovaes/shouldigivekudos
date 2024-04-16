@@ -40,7 +40,7 @@ export default (
         color: shouldIDeployColorTheme(time),
         thumb_url,
         footer_icon: shouldIDeployFavIcon(time),
-        footer: 'Should I deploy today' + (time ? ` | ${timezone}` : '')
+        footer: 'Should I Give Kudos today' + (time ? ` | ${timezone}` : '')
       }
     ]
   })

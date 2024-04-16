@@ -1,6 +1,6 @@
 // index.tsx
 import React, { useEffect, useState } from 'react'
-import { GetServerSideProps } from 'next'
+// import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import {
   shouldIDeploy,
@@ -18,24 +18,9 @@ interface IPage {
   initialReason: string
 }
 
-const Page: React.FC<IPage> = ({ tz, now: initialNow, initialReason }) => {
-  const [timezone, setTimezone] = useState<string>(tz)
-  const [now, setNow] = useState<any>(
-    new Time(initialNow.timezone, initialNow.customDate)
-  )
-
-  const changeTimezone = (newTimezone: string) => {
-    if (!Time.zoneExists(newTimezone)) {
-      return
-    }
-
-    let newUrl = new URL(window.location.toString())
-    newUrl.searchParams.set('tz', newTimezone)
-    Router.push(newUrl.pathname + newUrl.search)
-
-    setTimezone(newTimezone)
-    setNow(new Time(newTimezone))
-  }
+const Page: React.FC<IPage> = ({}) => {
+  const [timezone, setTimezone] = useState<string>('America/Sao_Paulo')
+  const [now, setNow] = useState<any>(new Time())
 
   return (
     <>
@@ -47,35 +32,35 @@ const Page: React.FC<IPage> = ({ tz, now: initialNow, initialReason }) => {
           sizes="32x32"
         />
         <meta property="og:image" content={`${getBaseUrl()}/api/og`} />
-        <title>Should I Deploy Today?</title>
+        <title>Should I Give Kudos today?</title>
       </Head>
       <div className={`wrapper ${!shouldIDeploy(now) && 'its-friday'}`}>
-        <Widget reason={initialReason} now={now} />
+        <Widget reason={'a'} now={now} />
         <div className="meta">
-          <Footer timezone={timezone} changeTimezone={changeTimezone} />
+          <Footer timezone={timezone} changeTimezone={() => {}} />
         </div>
       </div>
     </>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  let timezone = Array.isArray(context.query.tz)
-    ? context.query.tz[0] ?? Time.DEFAULT_TIMEZONE
-    : context.query.tz || Time.DEFAULT_TIMEZONE
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   let timezone = Array.isArray(context.query.tz)
+//     ? context.query.tz[0] ?? Time.DEFAULT_TIMEZONE
+//     : context.query.tz || Time.DEFAULT_TIMEZONE
 
-  if (!Time.zoneExists(timezone)) {
-    timezone = Time.DEFAULT_TIMEZONE
-  }
+//   if (!Time.zoneExists(timezone)) {
+//     timezone = Time.DEFAULT_TIMEZONE
+//   }
 
-  const time = Time.validOrNull(timezone)
+//   const time = Time.validOrNull(timezone)
 
-  return {
-    props: {
-      tz: timezone,
-      now: time ? time.toObject() : null
-    }
-  }
-}
+//   return {
+//     props: {
+//       tz: timezone,
+//       now: time ? time.toObject() : null
+//     }
+//   }
+// }
 
 export default Page
